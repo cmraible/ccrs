@@ -1,0 +1,1303 @@
+{
+  "files_requested": 7276,
+  "files_analyzed": 7276,
+  "bytes": 41169664,
+  "seconds": 4.245902125025168,
+  "parser_error_files": [
+    "apps/activitypub/src/components/layout/onboarding/step-1.tsx",
+    "apps/activitypub/src/components/layout/onboarding/step-3.tsx",
+    "apps/admin-x-framework/test/unit/api/images.test.tsx",
+    "apps/admin-x-framework/test/unit/hooks/use-koenig-file-upload.test.ts",
+    "apps/admin-x-framework/test/unit/providers/router-provider.test.tsx",
+    "apps/admin-x-framework/test/unit/utils/api/retry-reporting.test.tsx",
+    "apps/admin/src/analytics/views/stats/growth/growth.tsx",
+    "apps/admin/src/analytics/views/stats/web/components/top-content.tsx",
+    "apps/admin/src/automations/automations.test.tsx",
+    "apps/admin/src/automations/editor.test.tsx",
+    "apps/admin/src/dunning/dunning-ui.test.tsx",
+    "apps/admin/src/editor/editor-status.test.tsx",
+    "apps/admin/src/editor/publish/report-publish-failure.test.ts",
+    "apps/admin/src/editor/session/reauth-dialog.test.tsx",
+    "apps/admin/src/editor/session/session-banners.test.tsx",
+    "apps/admin/src/editor/session/use-leave-guard.test.ts",
+    "apps/admin/src/editor/use-editor-settings.test.tsx",
+    "apps/admin/src/hooks/use-private-site-login.test.ts",
+    "apps/admin/src/layout/app-sidebar/nav-settings.tsx",
+    "apps/admin/src/layout/app-sidebar/user-menu.tsx",
+    "apps/admin/src/members/activity/activity-email-preview.test.tsx",
+    "apps/admin/src/onboarding/components/onboarding-checklist.tsx",
+    "apps/admin/src/posts/analytics/hooks/use-post-newsletter-stats.test.tsx",
+    "apps/admin/src/posts/analytics/modals/gift-link-modal.test.tsx",
+    "apps/admin/src/posts/list/components/manage-post-view-popover.test.tsx",
+    "apps/admin/src/routes.test.tsx",
+    "apps/admin/src/sentry/automations-replay.test.ts",
+    "apps/admin/src/sentry/sentry-config.test.ts",
+    "apps/admin/src/sentry/use-sentry.test.tsx",
+    "apps/admin/src/settings/advanced/integrations/first-promoter-modal.tsx",
+    "apps/admin/src/settings/advanced/integrations/zapier-modal.tsx",
+    "apps/admin/src/settings/advanced/migration-tools/universal-import-modal.test.tsx",
+    "apps/admin/src/settings/email-design/welcome-email-customize-modal.test.tsx",
+    "apps/admin/src/settings/general/users/email-notifications-tab.tsx",
+    "apps/admin/src/settings/growth/offers.tsx",
+    "apps/admin/src/settings/membership/portal/portal-modal.tsx",
+    "apps/admin/src/settings/site/theme-modal.tsx",
+    "apps/admin/src/shared/analytics/use-filter-params.test.tsx",
+    "apps/admin/src/shared/filter-sources/use-tier-value-source.test.tsx",
+    "apps/ember-admin/app/components/koenig-lexical-editor.js",
+    "apps/ember-admin/app/controllers/lexical-editor.js",
+    "apps/shade/src/components/patterns/setting-group.stories.tsx",
+    "apps/shade/src/components/ui/avatar.stories.tsx",
+    "ghost/core/test/unit/server/services/automations/automations-api.test.ts",
+    "packages/i18n/src/index.ts"
+  ],
+  "scopes_in_clean_files": 86823,
+  "non_test_scopes": 33664,
+  "extensions": {
+    ".cjs": 16,
+    ".js": 2517,
+    ".mjs": 55,
+    ".ts": 3028,
+    ".tsx": 1552,
+    ".jsx": 102,
+    ".mts": 6
+  },
+  "top_complexity": [
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/member-repository.js",
+      "cognitive_complexity": 157,
+      "complexity": 162,
+      "end_byte": 74154,
+      "line": 1367,
+      "max_nesting": 7,
+      "name": "linkSubscription",
+      "start_byte": 44088,
+      "statement_count": 185
+    },
+    {
+      "path": "ghost/core/core/server/models/post.js",
+      "cognitive_complexity": 104,
+      "complexity": 115,
+      "end_byte": 38762,
+      "line": 572,
+      "max_nesting": 4,
+      "name": "onSaving",
+      "start_byte": 19159,
+      "statement_count": 126
+    },
+    {
+      "path": "apps/activitypub/src/components/feed/feed-item.tsx",
+      "cognitive_complexity": 88,
+      "complexity": 108,
+      "end_byte": 47845,
+      "line": 506,
+      "max_nesting": 1,
+      "name": "FeedItem",
+      "start_byte": 16518,
+      "statement_count": 38
+    },
+    {
+      "path": "apps/admin/src/settings/email/newsletters/newsletter-preview-content.tsx",
+      "cognitive_complexity": 76,
+      "complexity": 98,
+      "end_byte": 27583,
+      "line": 56,
+      "max_nesting": 1,
+      "name": "NewsletterPreviewContent",
+      "start_byte": 1751,
+      "statement_count": 18
+    },
+    {
+      "path": "koenig/koenig-lexical/src/components/ui/cards/CallToActionCard.tsx",
+      "cognitive_complexity": 39,
+      "complexity": 86,
+      "end_byte": 16965,
+      "line": 86,
+      "max_nesting": 0,
+      "name": "CallToActionCard",
+      "start_byte": 2954,
+      "statement_count": 12
+    },
+    {
+      "path": "apps/activitypub/src/views/preferences/components/domain.tsx",
+      "cognitive_complexity": 62,
+      "complexity": 82,
+      "end_byte": 24290,
+      "line": 88,
+      "max_nesting": 0,
+      "name": "Domain",
+      "start_byte": 2220,
+      "statement_count": 48
+    },
+    {
+      "path": "apps/admin/src/editor/preview/post-preview-modal.tsx",
+      "cognitive_complexity": 42,
+      "complexity": 82,
+      "end_byte": 20511,
+      "line": 97,
+      "max_nesting": 4,
+      "name": "PostPreviewModal",
+      "start_byte": 3431,
+      "statement_count": 63
+    },
+    {
+      "path": "koenig/koenig-lexical/src/components/ui/cards/SignupCard.tsx",
+      "cognitive_complexity": 56,
+      "complexity": 82,
+      "end_byte": 27044,
+      "line": 26,
+      "max_nesting": 0,
+      "name": "SignupCard",
+      "start_byte": 1517,
+      "statement_count": 18
+    },
+    {
+      "path": "koenig/koenig-lexical/src/components/ui/cards/HeaderCard/v2/HeaderCard.tsx",
+      "cognitive_complexity": 52,
+      "complexity": 77,
+      "end_byte": 26562,
+      "line": 26,
+      "max_nesting": 0,
+      "name": "HeaderCard",
+      "start_byte": 1630,
+      "statement_count": 19
+    },
+    {
+      "path": "apps/activitypub/src/views/profile/components/profile-page.tsx",
+      "cognitive_complexity": 20,
+      "complexity": 71,
+      "end_byte": 16052,
+      "line": 58,
+      "max_nesting": 1,
+      "name": "ProfilePage",
+      "start_byte": 1878,
+      "statement_count": 37
+    }
+  ],
+  "complexity_distribution": {
+    "median": 1,
+    "p95": 9,
+    "max": 162
+  },
+  "top_max_nesting": [
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/member-repository.js",
+      "cognitive_complexity": 157,
+      "complexity": 162,
+      "end_byte": 74154,
+      "line": 1367,
+      "max_nesting": 7,
+      "name": "linkSubscription",
+      "start_byte": 44088,
+      "statement_count": 185
+    },
+    {
+      "path": "ghost/core/core/server/services/members/import-export/import/importer.ts",
+      "cognitive_complexity": 93,
+      "complexity": 38,
+      "end_byte": 24401,
+      "line": 421,
+      "max_nesting": 6,
+      "name": "writeRows",
+      "start_byte": 16189,
+      "statement_count": 83
+    },
+    {
+      "path": "ghost/core/core/server/services/milestones/milestones-service.js",
+      "cognitive_complexity": 26,
+      "complexity": 17,
+      "end_byte": 9291,
+      "line": 197,
+      "max_nesting": 6,
+      "name": "#runARRQueries",
+      "start_byte": 5541,
+      "statement_count": 25
+    },
+    {
+      "path": "koenig/koenig-lexical/src/plugins/KoenigBehaviourPlugin.tsx",
+      "cognitive_complexity": 74,
+      "complexity": 41,
+      "end_byte": 37576,
+      "line": 652,
+      "max_nesting": 6,
+      "name": "<anonymous>",
+      "start_byte": 29862,
+      "statement_count": 70
+    },
+    {
+      "path": "koenig/koenig-lexical/src/plugins/KoenigBehaviourPlugin.tsx",
+      "cognitive_complexity": 61,
+      "complexity": 36,
+      "end_byte": 55144,
+      "line": 1013,
+      "max_nesting": 6,
+      "name": "<anonymous>",
+      "start_byte": 47361,
+      "statement_count": 67
+    },
+    {
+      "path": ".lintstagedrc.cjs",
+      "cognitive_complexity": 37,
+      "complexity": 11,
+      "end_byte": 2074,
+      "line": 42,
+      "max_nesting": 5,
+      "name": "expandPattern",
+      "start_byte": 1288,
+      "statement_count": 17
+    },
+    {
+      "path": "apps/admin-x-framework/src/utils/api/fetch-api.ts",
+      "cognitive_complexity": 42,
+      "complexity": 33,
+      "end_byte": 11324,
+      "line": 195,
+      "max_nesting": 5,
+      "name": "<anonymous>",
+      "start_byte": 6177,
+      "statement_count": 42
+    },
+    {
+      "path": "apps/admin/src/settings/advanced/migration-tools/universal-import-modal.tsx",
+      "cognitive_complexity": 18,
+      "complexity": 11,
+      "end_byte": 4072,
+      "line": 52,
+      "max_nesting": 5,
+      "name": "importFile",
+      "start_byte": 2558,
+      "statement_count": 32
+    },
+    {
+      "path": "apps/comments-ui/src/utils/helpers.ts",
+      "cognitive_complexity": 16,
+      "complexity": 7,
+      "end_byte": 6346,
+      "line": 169,
+      "max_nesting": 5,
+      "name": "getScrollToPosition",
+      "start_byte": 5249,
+      "statement_count": 14
+    },
+    {
+      "path": "ghost/core/core/server/data/seeders/importers/table-importer.ts",
+      "cognitive_complexity": 35,
+      "complexity": 14,
+      "end_byte": 5693,
+      "line": 101,
+      "max_nesting": 5,
+      "name": "batchInsert",
+      "start_byte": 3062,
+      "statement_count": 28
+    }
+  ],
+  "max_nesting_distribution": {
+    "median": 0,
+    "p95": 2,
+    "max": 7
+  },
+  "top_statement_count": [
+    {
+      "path": "ghost/core/core/server/web/api/endpoints/admin/routes.js",
+      "cognitive_complexity": 0,
+      "complexity": 1,
+      "end_byte": 26769,
+      "line": 17,
+      "max_nesting": 0,
+      "name": "apiRoutes",
+      "start_byte": 627,
+      "statement_count": 261
+    },
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/member-repository.js",
+      "cognitive_complexity": 157,
+      "complexity": 162,
+      "end_byte": 74154,
+      "line": 1367,
+      "max_nesting": 7,
+      "name": "linkSubscription",
+      "start_byte": 44088,
+      "statement_count": 185
+    },
+    {
+      "path": "koenig/kg-default-nodes/src/nodes/audio/audio-renderer.ts",
+      "cognitive_complexity": 0,
+      "complexity": 1,
+      "end_byte": 9487,
+      "line": 37,
+      "max_nesting": 0,
+      "name": "frontendTemplate",
+      "start_byte": 1132,
+      "statement_count": 127
+    },
+    {
+      "path": "ghost/core/core/server/models/post.js",
+      "cognitive_complexity": 104,
+      "complexity": 115,
+      "end_byte": 38762,
+      "line": 572,
+      "max_nesting": 4,
+      "name": "onSaving",
+      "start_byte": 19159,
+      "statement_count": 126
+    },
+    {
+      "path": "ghost/core/core/frontend/helpers/ghost_head.js",
+      "cognitive_complexity": 71,
+      "complexity": 60,
+      "end_byte": 20101,
+      "line": 359,
+      "max_nesting": 4,
+      "name": "ghost_head",
+      "start_byte": 12019,
+      "statement_count": 99
+    },
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/member-repository.js",
+      "cognitive_complexity": 71,
+      "complexity": 57,
+      "end_byte": 36212,
+      "line": 768,
+      "max_nesting": 5,
+      "name": "update",
+      "start_byte": 24660,
+      "statement_count": 96
+    },
+    {
+      "path": "koenig/kg-simplemde/src/js/simplemde.js",
+      "cognitive_complexity": 114,
+      "complexity": 44,
+      "end_byte": 18647,
+      "line": 265,
+      "max_nesting": 5,
+      "name": "toggleCodeBlock",
+      "start_byte": 8745,
+      "statement_count": 96
+    },
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/product-repository.js",
+      "cognitive_complexity": 64,
+      "complexity": 40,
+      "end_byte": 21729,
+      "line": 374,
+      "max_nesting": 4,
+      "name": "update",
+      "start_byte": 10164,
+      "statement_count": 94
+    },
+    {
+      "path": "ghost/core/core/boot.js",
+      "cognitive_complexity": 14,
+      "complexity": 15,
+      "end_byte": 29727,
+      "line": 649,
+      "max_nesting": 2,
+      "name": "bootGhost",
+      "start_byte": 23665,
+      "statement_count": 87
+    },
+    {
+      "path": "ghost/core/core/server/services/members/import-export/import/importer.ts",
+      "cognitive_complexity": 93,
+      "complexity": 38,
+      "end_byte": 24401,
+      "line": 421,
+      "max_nesting": 6,
+      "name": "writeRows",
+      "start_byte": 16189,
+      "statement_count": 83
+    }
+  ],
+  "statement_count_distribution": {
+    "median": 2,
+    "p95": 13,
+    "max": 261
+  },
+  "top_cognitive_complexity": [
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/member-repository.js",
+      "cognitive_complexity": 157,
+      "complexity": 162,
+      "end_byte": 74154,
+      "line": 1367,
+      "max_nesting": 7,
+      "name": "linkSubscription",
+      "start_byte": 44088,
+      "statement_count": 185
+    },
+    {
+      "path": "koenig/kg-simplemde/src/js/simplemde.js",
+      "cognitive_complexity": 114,
+      "complexity": 44,
+      "end_byte": 18647,
+      "line": 265,
+      "max_nesting": 5,
+      "name": "toggleCodeBlock",
+      "start_byte": 8745,
+      "statement_count": 96
+    },
+    {
+      "path": "ghost/core/core/server/models/post.js",
+      "cognitive_complexity": 104,
+      "complexity": 115,
+      "end_byte": 38762,
+      "line": 572,
+      "max_nesting": 4,
+      "name": "onSaving",
+      "start_byte": 19159,
+      "statement_count": 126
+    },
+    {
+      "path": "ghost/core/core/server/services/members/import-export/import/importer.ts",
+      "cognitive_complexity": 93,
+      "complexity": 38,
+      "end_byte": 24401,
+      "line": 421,
+      "max_nesting": 6,
+      "name": "writeRows",
+      "start_byte": 16189,
+      "statement_count": 83
+    },
+    {
+      "path": "apps/activitypub/src/components/feed/feed-item.tsx",
+      "cognitive_complexity": 88,
+      "complexity": 108,
+      "end_byte": 47845,
+      "line": 506,
+      "max_nesting": 1,
+      "name": "FeedItem",
+      "start_byte": 16518,
+      "statement_count": 38
+    },
+    {
+      "path": "apps/admin/src/settings/email/newsletters/newsletter-preview-content.tsx",
+      "cognitive_complexity": 76,
+      "complexity": 98,
+      "end_byte": 27583,
+      "line": 56,
+      "max_nesting": 1,
+      "name": "NewsletterPreviewContent",
+      "start_byte": 1751,
+      "statement_count": 18
+    },
+    {
+      "path": "koenig/koenig-lexical/src/plugins/KoenigBehaviourPlugin.tsx",
+      "cognitive_complexity": 74,
+      "complexity": 41,
+      "end_byte": 37576,
+      "line": 652,
+      "max_nesting": 6,
+      "name": "<anonymous>",
+      "start_byte": 29862,
+      "statement_count": 70
+    },
+    {
+      "path": "ghost/core/core/frontend/helpers/ghost_head.js",
+      "cognitive_complexity": 71,
+      "complexity": 60,
+      "end_byte": 20101,
+      "line": 359,
+      "max_nesting": 4,
+      "name": "ghost_head",
+      "start_byte": 12019,
+      "statement_count": 99
+    },
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/member-repository.js",
+      "cognitive_complexity": 71,
+      "complexity": 57,
+      "end_byte": 36212,
+      "line": 768,
+      "max_nesting": 5,
+      "name": "update",
+      "start_byte": 24660,
+      "statement_count": 96
+    },
+    {
+      "path": "koenig/koenig-lexical/src/plugins/KoenigBehaviourPlugin.tsx",
+      "cognitive_complexity": 68,
+      "complexity": 36,
+      "end_byte": 29716,
+      "line": 522,
+      "max_nesting": 5,
+      "name": "<anonymous>",
+      "start_byte": 23164,
+      "statement_count": 67
+    }
+  ],
+  "cognitive_complexity_distribution": {
+    "median": 0,
+    "p95": 6,
+    "max": 157
+  },
+  "source_filter": {
+    "excluded_path_components": [
+      "__fixtures__",
+      "__mocks__",
+      "__tests__",
+      "build",
+      "built",
+      "debug",
+      "dist",
+      "e2e",
+      "fixtures",
+      "mocks",
+      "node_modules",
+      "test",
+      "tests",
+      "umd",
+      "vendor",
+      "vendors"
+    ],
+    "excluded_filename_substrings": [
+      ".test.",
+      ".spec.",
+      ".stories.",
+      ".min."
+    ],
+    "clean_files": 4614,
+    "scopes": 29551
+  },
+  "provenance": {
+    "repository": "https://github.com/TryGhost/Ghost",
+    "checkout": "/Users/chris/Code/cmraible/tryghost/Ghost",
+    "head": "e4b04b5bafe3b1b660ceb356e39b7a78916f1f9d",
+    "branch": "codex/localhost-chatgpt-signin",
+    "input": "Tracked files from working tree, including local modifications; untracked files excluded",
+    "date": "2026-10-15",
+    "platform": "Darwin arm64",
+    "measurement": "One sequential scan, 100 paths per CLI invocation; wall time includes process startup, file reads, analysis, JSON serialization, capture, decoding, and output writes. Not incremental edit latency."
+  },
+  "reference_check": [
+    {
+      "path": "ghost/core/core/server/services/members/members-api/repositories/member-repository.js",
+      "name": "linkSubscription",
+      "line": 1367,
+      "actual": {
+        "complexity": 162,
+        "max_nesting": 7,
+        "statement_count": 185,
+        "cognitive_complexity": 157
+      },
+      "reference": {
+        "complexity": 162,
+        "max_nesting": 7,
+        "statement_count": 185,
+        "cognitive_complexity": 157
+      },
+      "matches": true
+    },
+    {
+      "path": "ghost/core/core/server/models/post.js",
+      "name": "onSaving",
+      "line": 572,
+      "actual": {
+        "complexity": 115,
+        "max_nesting": 4,
+        "statement_count": 126,
+        "cognitive_complexity": 104
+      },
+      "reference": {
+        "complexity": 115,
+        "max_nesting": 4,
+        "statement_count": 126,
+        "cognitive_complexity": 104
+      },
+      "matches": true
+    },
+    {
+      "path": "apps/activitypub/src/components/feed/feed-item.tsx",
+      "name": "FeedItem",
+      "line": 506,
+      "actual": {
+        "complexity": 108,
+        "max_nesting": 1,
+        "statement_count": 38,
+        "cognitive_complexity": 88
+      },
+      "reference": {
+        "complexity": 108,
+        "max_nesting": 1,
+        "statement_count": 38,
+        "cognitive_complexity": 88
+      },
+      "matches": true
+    },
+    {
+      "path": "ghost/core/core/server/services/members/import-export/import/importer.ts",
+      "name": "writeRows",
+      "line": 421,
+      "actual": {
+        "complexity": 38,
+        "max_nesting": 6,
+        "statement_count": 83,
+        "cognitive_complexity": 93
+      },
+      "reference": {
+        "complexity": 38,
+        "max_nesting": 6,
+        "statement_count": 83,
+        "cognitive_complexity": 93
+      },
+      "matches": true
+    },
+    {
+      "path": "ghost/core/core/server/services/milestones/milestones-service.js",
+      "name": "#runARRQueries",
+      "line": 197,
+      "actual": {
+        "complexity": 17,
+        "max_nesting": 6,
+        "statement_count": 25,
+        "cognitive_complexity": 26
+      },
+      "reference": {
+        "complexity": 17,
+        "max_nesting": 6,
+        "statement_count": 25,
+        "cognitive_complexity": 26
+      },
+      "matches": true
+    },
+    {
+      "path": "ghost/core/core/server/web/api/endpoints/admin/routes.js",
+      "name": "apiRoutes",
+      "line": 17,
+      "actual": {
+        "complexity": 1,
+        "max_nesting": 0,
+        "statement_count": 261,
+        "cognitive_complexity": 0
+      },
+      "reference": {
+        "complexity": 1,
+        "max_nesting": 0,
+        "statement_count": 261,
+        "cognitive_complexity": 0
+      },
+      "matches": true
+    },
+    {
+      "path": "koenig/kg-default-nodes/src/nodes/audio/audio-renderer.ts",
+      "name": "frontendTemplate",
+      "line": 37,
+      "actual": {
+        "complexity": 1,
+        "max_nesting": 0,
+        "statement_count": 127,
+        "cognitive_complexity": 0
+      },
+      "reference": {
+        "complexity": 1,
+        "max_nesting": 0,
+        "statement_count": 127,
+        "cognitive_complexity": 0
+      },
+      "matches": true
+    },
+    {
+      "path": "koenig/kg-simplemde/src/js/simplemde.js",
+      "name": "toggleCodeBlock",
+      "line": 265,
+      "actual": {
+        "complexity": 44,
+        "max_nesting": 5,
+        "statement_count": 96,
+        "cognitive_complexity": 114
+      },
+      "reference": {
+        "complexity": 44,
+        "max_nesting": 5,
+        "statement_count": 96,
+        "cognitive_complexity": 114
+      },
+      "matches": true
+    }
+  ],
+  "parser_validation": {
+    "checked": 45,
+    "reference_parser_failures": []
+  },
+  "parser_errors": [
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 48,
+          "text": "& follow your work."
+        }
+      ],
+      "path": "apps/activitypub/src/components/layout/onboarding/step-1.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 370,
+          "text": "& follow what you love."
+        }
+      ],
+      "path": "apps/activitypub/src/components/layout/onboarding/step-3.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 15,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin-x-framework/test/unit/api/images.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 16,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin-x-framework/test/unit/hooks/use-koenig-file-upload.test.ts"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 9,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin-x-framework/test/unit/providers/router-provider.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 7,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin-x-framework/test/unit/utils/api/retry-reporting.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 241,
+          "text": "& pages"
+        }
+      ],
+      "path": "apps/admin/src/analytics/views/stats/growth/growth.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 223,
+          "text": "& pages"
+        }
+      ],
+      "path": "apps/admin/src/analytics/views/stats/web/components/top-content.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 62,
+          "text": ","
+        },
+        {
+          "kind": "ERROR",
+          "line": 42,
+          "text": ","
+        },
+        {
+          "kind": "ERROR",
+          "line": 32,
+          "text": ","
+        }
+      ],
+      "path": "apps/admin/src/automations/automations.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 220,
+          "text": ","
+        },
+        {
+          "kind": "ERROR",
+          "line": 35,
+          "text": ","
+        }
+      ],
+      "path": "apps/admin/src/automations/editor.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 39,
+          "text": ","
+        }
+      ],
+      "path": "apps/admin/src/dunning/dunning-ui.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 21,
+          "text": ">()"
+        },
+        {
+          "kind": "ERROR",
+          "line": 12,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/editor/editor-status.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 14,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/editor/publish/report-publish-failure.test.ts"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 17,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/editor/session/reauth-dialog.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 16,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/editor/session/session-banners.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 15,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/editor/session/use-leave-guard.test.ts"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 10,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/editor/use-editor-settings.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 6,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/hooks/use-private-site-login.test.ts"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 32,
+          "text": "&utm_campaign=help"
+        }
+      ],
+      "path": "apps/admin/src/layout/app-sidebar/nav-settings.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 198,
+          "text": "& guides"
+        },
+        {
+          "kind": "ERROR",
+          "line": 193,
+          "text": "&utm_campaign=resources"
+        }
+      ],
+      "path": "apps/admin/src/layout/app-sidebar/user-menu.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 27,
+          "text": ","
+        }
+      ],
+      "path": "apps/admin/src/members/activity/activity-email-preview.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 102,
+          "text": "&utm_campaign=onboarding"
+        }
+      ],
+      "path": "apps/admin/src/onboarding/components/onboarding-checklist.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 26,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/posts/analytics/hooks/use-post-newsletter-stats.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 37,
+          "text": ","
+        },
+        {
+          "kind": "ERROR",
+          "line": 22,
+          "text": ","
+        }
+      ],
+      "path": "apps/admin/src/posts/analytics/modals/gift-link-modal.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 16,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/posts/list/components/manage-post-view-popover.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 31,
+          "text": ">()"
+        },
+        {
+          "kind": "ERROR",
+          "line": 25,
+          "text": ">()"
+        },
+        {
+          "kind": "ERROR",
+          "line": 20,
+          "text": ">()"
+        },
+        {
+          "kind": "ERROR",
+          "line": 15,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/routes.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 10,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/sentry/automations-replay.test.ts"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 6,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/sentry/sentry-config.test.ts"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 37,
+          "text": ">()"
+        },
+        {
+          "kind": "ERROR",
+          "line": 33,
+          "text": ">()"
+        },
+        {
+          "kind": "ERROR",
+          "line": 21,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/sentry/use-sentry.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 104,
+          "text": "&fp_sid=admin"
+        }
+      ],
+      "path": "apps/admin/src/settings/advanced/integrations/first-promoter-modal.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 81,
+          "text": "&utm_source=widget&utm_campaign=Widget"
+        }
+      ],
+      "path": "apps/admin/src/settings/advanced/integrations/zapier-modal.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 43,
+          "text": ","
+        },
+        {
+          "kind": "ERROR",
+          "line": 36,
+          "text": ","
+        },
+        {
+          "kind": "ERROR",
+          "line": 29,
+          "text": ","
+        }
+      ],
+      "path": "apps/admin/src/settings/advanced/migration-tools/universal-import-modal.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 11,
+          "text": ","
+        }
+      ],
+      "path": "apps/admin/src/settings/email-design/welcome-email-customize-modal.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 144,
+          "text": "& donations"
+        }
+      ],
+      "path": "apps/admin/src/settings/general/users/email-notifications-tab.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 46,
+          "text": "& coupons to boost new subscriptions and retain existing members."
+        }
+      ],
+      "path": "apps/admin/src/settings/growth/offers.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 67,
+          "text": "& feel"
+        }
+      ],
+      "path": "apps/admin/src/settings/membership/portal/portal-modal.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 63,
+          "text": "& drop zip file"
+        }
+      ],
+      "path": "apps/admin/src/settings/site/theme-modal.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 12,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/shared/analytics/use-filter-params.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 11,
+          "text": ">()"
+        }
+      ],
+      "path": "apps/admin/src/shared/filter-sources/use-tier-value-source.test.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 24,
+          "text": "\""
+        },
+        {
+          "kind": "ERROR",
+          "line": 24,
+          "text": "class=\""
+        }
+      ],
+      "path": "apps/ember-admin/app/components/koenig-lexical-editor.js"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 1407,
+          "text": ".drop())"
+        },
+        {
+          "kind": "ERROR",
+          "line": 1398,
+          "text": "("
+        },
+        {
+          "kind": "ERROR",
+          "line": 1394,
+          "text": ".restartable())"
+        },
+        {
+          "kind": "ERROR",
+          "line": 1382,
+          "text": "("
+        },
+        {
+          "kind": "ERROR",
+          "line": 240,
+          "text": ".enqueue())"
+        },
+        {
+          "kind": "ERROR",
+          "line": 240,
+          "text": "("
+        }
+      ],
+      "path": "apps/ember-admin/app/controllers/lexical-editor.js"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 89,
+          "text": "& description"
+        },
+        {
+          "kind": "ERROR",
+          "line": 61,
+          "text": "& description"
+        }
+      ],
+      "path": "apps/shade/src/components/patterns/setting-group.stories.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 143,
+          "text": "&v=4"
+        },
+        {
+          "kind": "ERROR",
+          "line": 139,
+          "text": "&v=4"
+        },
+        {
+          "kind": "ERROR",
+          "line": 122,
+          "text": "&v=4"
+        },
+        {
+          "kind": "ERROR",
+          "line": 118,
+          "text": "&v=4"
+        },
+        {
+          "kind": "ERROR",
+          "line": 86,
+          "text": "&s=250"
+        },
+        {
+          "kind": "ERROR",
+          "line": 81,
+          "text": "&v=4"
+        },
+        {
+          "kind": "ERROR",
+          "line": 39,
+          "text": "&v=4"
+        }
+      ],
+      "path": "apps/shade/src/components/ui/avatar.stories.tsx"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 24,
+          "text": ">()"
+        }
+      ],
+      "path": "ghost/core/test/unit/server/services/automations/automations-api.test.ts"
+    },
+    {
+      "errors": [
+        {
+          "kind": "ERROR",
+          "line": 25,
+          "text": "type"
+        }
+      ],
+      "path": "packages/i18n/src/index.ts"
+    }
+  ],
+  "raw_results": "/tmp/ccrs-ghost/results.jsonl"
+}

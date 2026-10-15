@@ -1,0 +1,16 @@
+[package]
+name = "ccrs"
+version = "0.1.0"
+edition = "2024"
+description = "Incremental code complexity metrics for JavaScript and TypeScript"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tree-sitter = "0.27.1"
+tree-sitter-javascript = "0.25"
+tree-sitter-typescript = "0.23.2"
+
+[[bench]]
+name = "latency"
+harness = false
