@@ -3,12 +3,12 @@
 //! ```
 //! use ccrs::{Document, Language};
 //! let mut doc = Document::new(Language::TypeScript, "const f = () => 1;".into())?;
-//! assert_eq!(doc.analyze().scopes[1].complexity, 1);
+//! assert_eq!(doc.analyze().scopes[1].complexity, Some(1));
 //! doc.edit(16, 17, "x ? 1 : 0")?;
-//! assert_eq!(doc.analyze().scopes[1].complexity, 2);
-//! assert_eq!(doc.analyze().scopes[1].max_nesting, 0);
-//! assert_eq!(doc.analyze().scopes[1].statement_count, 0);
-//! assert_eq!(doc.analyze().scopes[1].cognitive_complexity, 1);
+//! assert_eq!(doc.analyze().scopes[1].complexity, Some(2));
+//! assert_eq!(doc.analyze().scopes[1].max_nesting, Some(0));
+//! assert_eq!(doc.analyze().scopes[1].statement_count, Some(0));
+//! assert_eq!(doc.analyze().scopes[1].cognitive_complexity, Some(1));
 //! # Ok::<(), String>(())
 //! ```
 mod metrics;
@@ -25,16 +25,58 @@ pub enum Language {
     Tsx,
 }
 
+/// Metrics selectable independently for each analysis.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Metric {
+    Cyclomatic,
+    Nesting,
+    Statements,
+    Cognitive,
+}
+
+impl Metric {
+    pub const ALL: [Self; 4] = [
+        Self::Cyclomatic,
+        Self::Nesting,
+        Self::Statements,
+        Self::Cognitive,
+    ];
+
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Cyclomatic => "cyclomatic",
+            Self::Nesting => "nesting",
+            Self::Statements => "statements",
+            Self::Cognitive => "cognitive",
+        }
+    }
+}
+
+impl std::str::FromStr for Metric {
+    type Err = String;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        Self::ALL.into_iter().find(|metric| metric.name() == value)
+            .ok_or_else(|| format!("Unknown metric '{value}'; expected cyclomatic, nesting, statements, or cognitive"))
+    }
+}
+
+/// A lexical scope. Unselected metrics are None and omitted from serialized reports.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Scope {
     pub name: String,
-    pub complexity: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub complexity: Option<usize>,
     /// Maximum control-flow nesting, with each scope starting at zero.
-    pub max_nesting: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_nesting: Option<usize>,
     /// Number of block entries, following ESLint max-statements.
-    pub statement_count: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub statement_count: Option<usize>,
     /// SonarJS-style cognitive complexity, starting at zero.
-    pub cognitive_complexity: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cognitive_complexity: Option<usize>,
     pub start_byte: usize,
     pub end_byte: usize,
     /// One-based line number.
@@ -108,9 +150,16 @@ impl Document {
         Ok(())
     }
 
+    /// Calculate all four metrics.
     pub fn analyze(&self) -> Report {
+        self.analyze_with(&Metric::ALL)
+    }
+
+    /// Calculate only selected metrics. Disabled values are None and omitted from JSON.
+    /// An empty selection returns scope locations and parser status only.
+    pub fn analyze_with(&self, metrics: &[Metric]) -> Report {
         let root = self.tree.root_node();
-        let mut scopes = vec![scope(root, "<module>".into())];
+        let mut scopes = vec![scope(root, "<module>".into(), metrics)];
         let mut pending = vec![(root, Context::default(), false)];
         while let Some((node, outer, initializer)) = pending.pop() {
             let Context {
@@ -121,7 +170,7 @@ impl Document {
             if initializer {
                 depth = 0;
                 cognitive_depth = 0;
-                scopes.push(scope(node, "<field initializer>".into()));
+                scopes.push(scope(node, "<field initializer>".into(), metrics));
                 enclosing = scopes.len() - 1;
             }
             let current = if is_function(node) || node.kind() == "class_static_block" {
@@ -142,17 +191,21 @@ impl Document {
                             "<anonymous>".into()
                         }
                     });
-                scopes.push(scope(node, name));
+                scopes.push(scope(node, name, metrics));
                 scopes.len() - 1
             } else {
                 enclosing
             };
-            if is_decision(node) {
-                scopes[current].complexity += 1;
+            if let Some(value) = &mut scopes[current].complexity {
+                *value += usize::from(is_decision(node));
             }
-            scopes[current].cognitive_complexity += cognitive_increment(node, cognitive_depth);
-            depth += usize::from(increases_depth(node));
-            scopes[current].max_nesting = scopes[current].max_nesting.max(depth);
+            if let Some(value) = &mut scopes[current].cognitive_complexity {
+                *value += cognitive_increment(node, cognitive_depth);
+            }
+            if let Some(value) = &mut scopes[current].max_nesting {
+                depth += usize::from(increases_depth(node));
+                *value = (*value).max(depth);
+            }
             let function = is_function(node);
             let name = if function {
                 node.child_by_field_name("name")
@@ -164,7 +217,8 @@ impl Document {
             } else {
                 None
             };
-            let counts_statements = matches!(node.kind(), "program" | "statement_block");
+            let counts_statements = scopes[current].statement_count.is_some()
+                && matches!(node.kind(), "program" | "statement_block");
             let mut cursor = node.walk();
             if cursor.goto_last_child() {
                 loop {
@@ -172,8 +226,9 @@ impl Document {
                     if child.is_named() {
                         if counts_statements
                             && !matches!(child.kind(), "comment" | "hash_bang_line")
+                            && let Some(value) = &mut scopes[current].statement_count
                         {
-                            scopes[current].statement_count += 1;
+                            *value += 1;
                         }
                         let owner =
                             if function && (name == Some(child) || child.kind() == "decorator") {
@@ -186,7 +241,10 @@ impl Document {
                                 scope: current,
                                 depth,
                                 cognitive_depth: cognitive_depth
-                                    + usize::from(nests_cognitively(node, child)),
+                                    + usize::from(
+                                        scopes[current].cognitive_complexity.is_some()
+                                            && nests_cognitively(node, child),
+                                    ),
                             }
                         } else {
                             outer
@@ -206,13 +264,13 @@ impl Document {
     }
 }
 
-fn scope(node: Node<'_>, name: String) -> Scope {
+fn scope(node: Node<'_>, name: String, metrics: &[Metric]) -> Scope {
     Scope {
         name,
-        complexity: 1,
-        max_nesting: 0,
-        statement_count: 0,
-        cognitive_complexity: 0,
+        complexity: metrics.contains(&Metric::Cyclomatic).then_some(1),
+        max_nesting: metrics.contains(&Metric::Nesting).then_some(0),
+        statement_count: metrics.contains(&Metric::Statements).then_some(0),
+        cognitive_complexity: metrics.contains(&Metric::Cognitive).then_some(0),
         start_byte: node.start_byte(),
         end_byte: node.end_byte(),
         line: node.start_position().row + 1,

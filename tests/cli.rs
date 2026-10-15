@@ -199,3 +199,124 @@ fn service_returns_all_metrics_after_buffer_edits() {
     assert_eq!(scope["statement_count"], 3);
     assert_eq!(scope["cognitive_complexity"], 3);
 }
+
+#[test]
+fn cli_selects_metrics_for_text_and_json_output() {
+    let source = "function f() { if (a) { while (b) { run(); } } }";
+    let output = run(
+        &["--metrics", "cyclomatic,cognitive", "--stdin", "a.js"],
+        source,
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let text = String::from_utf8(output.stdout).unwrap();
+    assert!(text.contains("cyclomatic=3 cognitive=3"), "{text}");
+    assert!(!text.contains("nesting="));
+    assert!(!text.contains("statements="));
+    let output = run(
+        &[
+            "--json",
+            "--metrics",
+            "nesting",
+            "--max-nesting",
+            "1",
+            "--stdin",
+            "a.js",
+        ],
+        source,
+    );
+    assert_eq!(output.status.code(), Some(1));
+    let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    let scope = &json["report"]["scopes"][1];
+    assert_eq!(scope["max_nesting"], 2);
+    for key in ["complexity", "statement_count", "cognitive_complexity"] {
+        assert!(scope.get(key).is_none(), "{key}");
+    }
+}
+
+#[test]
+fn cli_rejects_limits_for_disabled_metrics_and_invalid_selections() {
+    for (metric, flag) in [
+        ("nesting", "--max"),
+        ("cognitive", "--max-nesting"),
+        ("cyclomatic", "--max-statements"),
+        ("statements", "--max-cognitive"),
+    ] {
+        for limit in ["1".to_owned(), usize::MAX.to_string()] {
+            let output = run(&["--metrics", metric, flag, &limit, "--stdin", "a.js"], "");
+            assert_eq!(output.status.code(), Some(2), "{metric} {flag} {limit}");
+            assert!(
+                String::from_utf8(output.stderr)
+                    .unwrap()
+                    .contains("disabled")
+            );
+            assert!(output.stdout.is_empty());
+        }
+    }
+    for selection in ["", "cognitve", "nesting,", "all"] {
+        let output = run(&["--metrics", selection, "--stdin", "a.js"], "");
+        assert_eq!(output.status.code(), Some(2), "{selection}");
+        assert!(
+            String::from_utf8(output.stderr)
+                .unwrap()
+                .contains("Unknown metric")
+        );
+    }
+}
+
+#[test]
+fn service_keeps_each_documents_metric_selection_across_edits() {
+    let source = "const f = () => 1;";
+    let requests = [
+        serde_json::json!({"op":"open","path":"a.ts","source":source,"metrics":["cognitive"]}),
+        serde_json::json!({"op":"open","path":"b.ts","source":source}),
+        serde_json::json!({"op":"edit","path":"a.ts","version":0,"start_byte":16,"end_byte":17,"text":"x ? 1 : 0"}),
+        serde_json::json!({"op":"open","path":"c.ts","source":source,"metrics":["typo"]}),
+        serde_json::json!({"op":"open","path":"c.ts","source":source,"metrics":[]}),
+    ];
+    let output = run(
+        &["serve"],
+        &requests
+            .iter()
+            .map(|r| format!("{r}\n"))
+            .collect::<String>(),
+    );
+    assert!(output.status.success());
+    let results: Vec<serde_json::Value> = String::from_utf8(output.stdout)
+        .unwrap()
+        .lines()
+        .map(|s| serde_json::from_str(s).unwrap())
+        .collect();
+    let first = &results[0]["report"]["scopes"][1];
+    assert_eq!(first["cognitive_complexity"], 0, "{}", results[0]);
+    for key in ["complexity", "max_nesting", "statement_count"] {
+        assert!(first.get(key).is_none());
+    }
+    let default = &results[1]["report"]["scopes"][1];
+    for key in [
+        "complexity",
+        "max_nesting",
+        "statement_count",
+        "cognitive_complexity",
+    ] {
+        assert!(default.get(key).is_some());
+    }
+    let edited = &results[2]["report"]["scopes"][1];
+    assert_eq!(edited["cognitive_complexity"], 1);
+    assert!(edited.get("complexity").is_none());
+    assert_eq!(results[2]["version"], 1);
+    assert!(results[3]["error"].is_string());
+    let empty = &results[4]["report"]["scopes"][1];
+    assert_eq!(empty["name"], "f");
+    for key in [
+        "complexity",
+        "max_nesting",
+        "statement_count",
+        "cognitive_complexity",
+    ] {
+        assert!(empty.get(key).is_none());
+    }
+}

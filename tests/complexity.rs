@@ -10,9 +10,9 @@ fn counts_decisions_within_a_function() {
     let report = doc.analyze();
     assert!(!report.has_errors);
     assert_eq!(report.scopes.len(), 2);
-    assert_eq!(report.scopes[0].complexity, 1);
+    assert_eq!(report.scopes[0].complexity.unwrap(), 1);
     assert_eq!(report.scopes[1].name, "choose");
-    assert_eq!(report.scopes[1].complexity, 2);
+    assert_eq!(report.scopes[1].complexity.unwrap(), 2);
 }
 
 #[test]
@@ -42,7 +42,7 @@ fn counts_each_runtime_branch_but_not_nonbranching_syntax() {
             let report = Document::new(language, source).unwrap().analyze();
             assert!(!report.has_errors, "{language:?}: {body}");
             assert_eq!(
-                report.scopes[1].complexity,
+                report.scopes[1].complexity.unwrap(),
                 1 + decisions,
                 "{language:?}: {body}"
             );
@@ -66,7 +66,7 @@ fn isolates_nested_functions_and_default_parameters() {
         let scores: Vec<_> = report
             .scopes
             .iter()
-            .map(|s| (s.name.as_str(), s.complexity))
+            .map(|s| (s.name.as_str(), s.complexity.unwrap()))
             .collect();
         assert_eq!(
             scores,
@@ -95,7 +95,11 @@ fn class_initializers_are_independent_but_computed_names_run_outside_methods() {
     for language in [Language::JavaScript, Language::TypeScript, Language::Tsx] {
         let report = Document::new(language, source.into()).unwrap().analyze();
         assert!(!report.has_errors);
-        let scores: Vec<_> = report.scopes.iter().map(|s| s.complexity).collect();
+        let scores: Vec<_> = report
+            .scopes
+            .iter()
+            .map(|s| s.complexity.unwrap())
+            .collect();
         assert_eq!(scores, [1, 3, 2, 2, 2, 2], "{language:?}");
     }
 }
@@ -135,7 +139,7 @@ fn reports_parse_errors_and_recovers_after_an_edit() {
     doc.edit(19, 19, "true) {} }").unwrap();
     let report = doc.analyze();
     assert!(!report.has_errors);
-    assert_eq!(report.scopes[1].complexity, 2);
+    assert_eq!(report.scopes[1].complexity.unwrap(), 2);
 }
 
 #[test]
@@ -148,8 +152,8 @@ fn types_and_jsx_text_do_not_count_as_runtime_branches() {
         .analyze();
     assert!(!report.has_errors);
     assert_eq!(report.scopes.len(), 2);
-    assert_eq!(report.scopes[0].complexity, 1);
-    assert_eq!(report.scopes[1].complexity, 3);
+    assert_eq!(report.scopes[0].complexity.unwrap(), 1);
+    assert_eq!(report.scopes[1].complexity.unwrap(), 3);
 }
 
 #[test]

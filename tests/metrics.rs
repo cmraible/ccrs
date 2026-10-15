@@ -11,7 +11,7 @@ fn nesting_tracks_control_flow_and_resets_for_nested_scopes() {
         let depths: Vec<_> = report
             .scopes
             .iter()
-            .map(|s| (s.name.as_str(), s.max_nesting))
+            .map(|s| (s.name.as_str(), s.max_nesting.unwrap()))
             .collect();
         assert_eq!(
             depths,
@@ -52,10 +52,11 @@ fn statement_count_follows_eslint_block_entries_and_excludes_nested_bodies() {
                 .analyze();
             assert!(!report.has_errors, "{body}");
             assert_eq!(
-                report.scopes[1].statement_count, expected,
+                report.scopes[1].statement_count.unwrap(),
+                expected,
                 "{language:?}: {body}"
             );
-            assert_eq!(report.scopes[0].statement_count, 1);
+            assert_eq!(report.scopes[0].statement_count.unwrap(), 1);
         }
     }
 }
@@ -80,7 +81,8 @@ fn nesting_ignores_plain_blocks_and_else_if_but_counts_try_and_switch() {
                 .analyze();
             assert!(!report.has_errors, "{body}");
             assert_eq!(
-                report.scopes[1].max_nesting, expected,
+                report.scopes[1].max_nesting.unwrap(),
+                expected,
                 "{language:?}: {body}"
             );
         }
@@ -114,7 +116,8 @@ fn cognitive_complexity_penalizes_nesting_and_starts_at_zero() {
                 .analyze();
             assert!(!report.has_errors, "{body}");
             assert_eq!(
-                report.scopes[1].cognitive_complexity, expected,
+                report.scopes[1].cognitive_complexity.unwrap(),
+                expected,
                 "{language:?}: {body}"
             );
         }
@@ -146,7 +149,8 @@ fn cognitive_logical_sequences_follow_sonarjs_operator_rules() {
             .analyze();
             assert!(!report.has_errors, "{expression}");
             assert_eq!(
-                report.scopes[1].cognitive_complexity, expected,
+                report.scopes[1].cognitive_complexity.unwrap(),
+                expected,
                 "{language:?}: {expression}"
             );
         }
@@ -172,7 +176,8 @@ fn cognitive_complexity_recognizes_jsx_short_circuit_idioms() {
             .analyze();
             assert!(!report.has_errors, "{expression}");
             assert_eq!(
-                report.scopes[1].cognitive_complexity, expected,
+                report.scopes[1].cognitive_complexity.unwrap(),
+                expected,
                 "{language:?}: {expression}"
             );
         }
@@ -197,7 +202,8 @@ fn cognitive_sequences_respect_typescript_assertion_precedence() {
                 .analyze();
             assert!(!report.has_errors);
             assert_eq!(
-                report.scopes[1].cognitive_complexity, expected,
+                report.scopes[1].cognitive_complexity.unwrap(),
+                expected,
                 "{expression}"
             );
         }
@@ -218,7 +224,13 @@ fn all_metrics_keep_class_and_function_scopes_independent() {
         let metrics: Vec<_> = report
             .scopes
             .iter()
-            .map(|s| (s.max_nesting, s.statement_count, s.cognitive_complexity))
+            .map(|s| {
+                (
+                    s.max_nesting.unwrap(),
+                    s.statement_count.unwrap(),
+                    s.cognitive_complexity.unwrap(),
+                )
+            })
             .collect();
         assert_eq!(
             metrics,
@@ -251,24 +263,30 @@ fn flattening_an_edited_function_reduces_nesting_and_cognitive_complexity() {
             Document::new(language, flat.into()).unwrap().analyze()
         );
         assert_eq!(
-            (before.scopes[1].complexity, after.scopes[1].complexity),
+            (
+                before.scopes[1].complexity.unwrap(),
+                after.scopes[1].complexity.unwrap()
+            ),
             (4, 4)
         );
         assert_eq!(
-            (before.scopes[1].max_nesting, after.scopes[1].max_nesting),
+            (
+                before.scopes[1].max_nesting.unwrap(),
+                after.scopes[1].max_nesting.unwrap()
+            ),
             (3, 1)
         );
         assert_eq!(
             (
-                before.scopes[1].cognitive_complexity,
-                after.scopes[1].cognitive_complexity
+                before.scopes[1].cognitive_complexity.unwrap(),
+                after.scopes[1].cognitive_complexity.unwrap()
             ),
             (6, 3)
         );
         assert_eq!(
             (
-                before.scopes[1].statement_count,
-                after.scopes[1].statement_count
+                before.scopes[1].statement_count.unwrap(),
+                after.scopes[1].statement_count.unwrap()
             ),
             (3, 3)
         );

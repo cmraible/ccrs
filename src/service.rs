@@ -1,4 +1,4 @@
-use ccrs::Document;
+use ccrs::{Document, Metric};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use std::{
@@ -12,6 +12,7 @@ enum Request {
     Open {
         path: String,
         source: String,
+        metrics: Option<Vec<Metric>>,
     },
     Edit {
         path: String,
@@ -42,17 +43,23 @@ pub fn run() -> Result<(), String> {
 }
 
 fn handle(
-    documents: &mut HashMap<String, (Document, u64)>,
+    documents: &mut HashMap<String, (Document, u64, Vec<Metric>)>,
     request: Request,
 ) -> Result<Value, String> {
     match request {
-        Request::Open { path, source } => {
+        Request::Open {
+            path,
+            source,
+            metrics,
+        } => {
+            let metrics = metrics.unwrap_or_else(|| Metric::ALL.to_vec());
             if documents.contains_key(&path) {
                 return Err("Document is already open; close it before reopening".into());
             }
             let document = Document::new(super::language(&path)?, source)?;
-            let result = json!({"path": path, "version": 0, "report": document.analyze()});
-            documents.insert(path, (document, 0));
+            let result =
+                json!({"path": path, "version": 0, "report": document.analyze_with(&metrics)});
+            documents.insert(path, (document, 0, metrics));
             Ok(result)
         }
         Request::Edit {
@@ -62,7 +69,8 @@ fn handle(
             end_byte,
             text,
         } => {
-            let (document, current) = documents.get_mut(&path).ok_or("Document is not open")?;
+            let (document, current, metrics) =
+                documents.get_mut(&path).ok_or("Document is not open")?;
             if version != *current {
                 return Err(format!(
                     "Stale version: expected {current}, received {version}"
@@ -71,7 +79,7 @@ fn handle(
             let next = current.checked_add(1).ok_or("Document version overflow")?;
             document.edit(start_byte, end_byte, &text)?;
             *current = next;
-            Ok(json!({"path": path, "version": current, "report": document.analyze()}))
+            Ok(json!({"path": path, "version": current, "report": document.analyze_with(metrics)}))
         }
         Request::Close { path } => {
             documents.remove(&path).ok_or("Document is not open")?;

@@ -28,7 +28,7 @@ example.js:1  cyclomatic=4 nesting=3 statements=3 cognitive=6  f
 ```
 
 `--json` emits one JSON object per file, each containing `path` and `report`.
-All four metrics are also included in every JSON service report.
+All four metrics are enabled by default in the CLI, library, and JSON service.
 
 | CLI limit | JSON / Rust field | Baseline |
 | --- | --- | ---: |
@@ -41,6 +41,26 @@ Exit codes: **0** success, **1** a scope strictly exceeds any supplied limit,
 **2** an input error or parser syntax error. Limits apply to all reported scopes,
 including the module. There are no default limits. The module measures top-level
 code; it is not a sum of the function metrics.
+
+## Select metrics
+
+Use `--metrics` with a comma-separated list of `cyclomatic`, `nesting`,
+`statements`, and `cognitive`:
+
+```sh
+./target/release/ccrs --metrics cyclomatic,cognitive src/example.ts
+./target/release/ccrs --json --metrics nesting --max-nesting 3 src/example.ts
+```
+
+Only selected metrics are calculated and displayed. Disabled fields are omitted
+from JSON, not reported as zero or null. Parsing, scope discovery, and parser-error
+reporting still run. Duplicate names have no additional effect; output keeps the
+standard metric order. Empty or unknown CLI selections are rejected. Omit the flag
+to calculate all four metrics.
+
+A limit for a disabled metric is an error: for example, `--metrics cognitive --max 5`
+would not enforce cyclomatic complexity, so the CLI rejects it. Select the metric
+or remove its limit.
 
 ## Counting rules
 
@@ -116,7 +136,7 @@ and **6**, respectively.
 
 ### Report structure and incomplete code
 
-Reports contain `has_errors` and `scopes`. Each scope has the four metric fields
+Reports contain `has_errors` and `scopes`. Each scope has the selected metric fields
 listed above, plus `name`, `line`, `start_byte`, and `end_byte`. Byte ranges are half-open UTF-8 ranges;
 lines are one-based. Anonymous functions get a variable name where directly
 assigned, otherwise `<anonymous>`. Initializers and static blocks use descriptive
@@ -134,14 +154,32 @@ fixtures; it does not establish full reference equivalence for every language fe
 use ccrs::{Document, Language};
 
 let mut doc = Document::new(Language::TypeScript, "const f = () => 1;".into())?;
-assert_eq!(doc.analyze().scopes[1].complexity, 1);
+assert_eq!(doc.analyze().scopes[1].complexity, Some(1));
 doc.edit(16, 17, "x ? 1 : 0")?;
-assert_eq!(doc.analyze().scopes[1].complexity, 2);
-assert_eq!(doc.analyze().scopes[1].max_nesting, 0);
-assert_eq!(doc.analyze().scopes[1].statement_count, 0);
-assert_eq!(doc.analyze().scopes[1].cognitive_complexity, 1);
+assert_eq!(doc.analyze().scopes[1].complexity, Some(2));
+assert_eq!(doc.analyze().scopes[1].max_nesting, Some(0));
+assert_eq!(doc.analyze().scopes[1].statement_count, Some(0));
+assert_eq!(doc.analyze().scopes[1].cognitive_complexity, Some(1));
 # Ok::<(), String>(())
 ```
+
+Select metrics for an individual analysis without reparsing or changing the document:
+
+```rust
+use ccrs::{Document, Language, Metric};
+
+let doc = Document::new(Language::TypeScript, "const f = () => x ? 1 : 0;".into())?;
+let report = doc.analyze_with(&[Metric::Cognitive]);
+assert_eq!(report.scopes[1].cognitive_complexity, Some(1));
+assert_eq!(report.scopes[1].complexity, None);
+# Ok::<(), String>(())
+```
+
+`analyze()` calculates all four metrics; `analyze_with(&Metric::ALL)` is equivalent.
+An empty slice returns scope locations and parser status without metric values.
+Metric fields in the Rust `Scope` API are now `Option<usize>` rather than `usize`:
+`Some(score)` means calculated, including zero, and `None` means disabled. This is
+a Rust source API change; default JSON values remain numbers with the same keys.
 
 `Document` retains the source, parser, and syntax tree. Edits must use UTF-8 byte
 offsets on character boundaries; invalid ranges return an error without changing
@@ -161,6 +199,18 @@ and responses correspond in input order. JSON strings must escape embedded newli
 ```
 
 `open` returns `{ "path": "…", "version": 0, "report": { … } }`.
+It accepts an optional per-document metric selection:
+
+```jsonl
+{"op":"open","path":"example.ts","source":"const f = () => 1;","metrics":["cyclomatic","cognitive"]}
+```
+
+Omitting `metrics` (or sending `null`) enables all four; `[]` requests only scope
+locations and parser status. Unknown names are rejected. The selection persists
+across all edits to that document and is independent of other open documents.
+Close and reopen the document to change its selection. `metrics` is accepted on
+`open` only; subsequent `edit` responses include the selected fields.
+
 An edit supplies the **current** version and returns the next version and report.
 Every successful edit advances the version, including an empty edit. Syntax errors
 in an edited buffer still produce a successful report with `has_errors: true`.
@@ -188,7 +238,7 @@ cargo bench --bench latency
 
 The tests exercise public APIs and the real CLI, including scope ownership,
 branch counting, nesting, cognitive operator sequences, statement conventions,
-TypeScript assertion precedence, protocol version checks, immediate response
+TypeScript assertion precedence, all 16 metric selections, protocol version checks, immediate response
 flushing, and incremental-versus-fresh parsing at every UTF-8 boundary of a
 fixture with Unicode and CRLF line endings.
 
@@ -211,14 +261,19 @@ verify the extended scope policy, including module and class initializer scopes.
 
 Measured locally on macOS ARM64 with Rust 1.98.0, release mode. The benchmark
 creates synthetic files with 10, 100, or 1,000 functions, warms up for 20 runs,
-and samples 200 edits. Each edit replaces a logical operator near EOF and includes
+and samples 200 edits per selection (all metrics and cyclomatic only). Each edit replaces a logical operator near EOF and includes
 source editing, incremental parsing, and analysis of all four metrics.
 
 | Grammar | 800 B: median | 8 KB: median | 82 KB: median | 82 KB: p95 |
 | --- | ---: | ---: | ---: | ---: |
-| JavaScript | 0.105 ms | 0.870 ms | 8.976 ms | 9.209 ms |
-| TypeScript | 0.093 ms | 0.905 ms | 9.443 ms | 9.838 ms |
-| TSX | 0.093 ms | 0.925 ms | 9.386 ms | 9.597 ms |
+| JavaScript | 0.092 ms | 0.879 ms | 8.942 ms | 9.288 ms |
+| TypeScript | 0.086 ms | 0.902 ms | 9.246 ms | 9.451 ms |
+| TSX | 0.093 ms | 0.931 ms | 9.384 ms | 9.625 ms |
+
+With only cyclomatic complexity selected, median edit-plus-analysis latency on
+the same 82 KB fixture was **4.013 ms** for JavaScript, **4.215 ms** for TypeScript,
+and **4.265 ms** for TSX, compared with roughly 9 ms for all four metrics. Disabled
+metrics skip both their counting logic and their metric-specific nesting tracking.
 
 These are synthetic library measurements, not editor latency guarantees. They
 exclude process startup, JSON serialization, transport, and rendering. Cold parse

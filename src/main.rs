@@ -1,6 +1,6 @@
 mod service;
 
-use ccrs::{Document, Language};
+use ccrs::{Document, Language, Metric};
 use std::{
     io::{self, Read},
     path::Path,
@@ -37,15 +37,24 @@ fn run() -> Result<u8, String> {
         return Ok(0);
     }
     let mut json = false;
-    let mut max = usize::MAX;
-    let mut max_nesting = usize::MAX;
-    let mut max_statements = usize::MAX;
-    let mut max_cognitive = usize::MAX;
+    let mut metrics = Metric::ALL.to_vec();
+    let mut max = None;
+    let mut max_nesting = None;
+    let mut max_statements = None;
+    let mut max_cognitive = None;
     let mut stdin_path = None;
     let mut paths = Vec::new();
     while let Some(arg) = args.next() {
         match arg.as_str() {
             "--json" => json = true,
+            "--metrics" => {
+                metrics = args
+                    .next()
+                    .ok_or("--metrics requires a comma-separated list")?
+                    .split(',')
+                    .map(|name| name.trim().parse())
+                    .collect::<Result<Vec<Metric>, _>>()?;
+            }
             "--max" | "--max-nesting" | "--max-statements" | "--max-cognitive" => {
                 let limit = args
                     .next()
@@ -57,12 +66,12 @@ fn run() -> Result<u8, String> {
                     "--max-statements" => &mut max_statements,
                     "--max-cognitive" => &mut max_cognitive,
                     _ => &mut max,
-                } = limit;
+                } = Some(limit);
             }
             "--stdin" => stdin_path = Some(args.next().ok_or("--stdin requires a filename")?),
             "--help" | "-h" => {
                 println!(
-                    "ccrs [--json] [--max N] FILE...\nccrs [--json] [--max N] --stdin FILENAME\nccrs serve\n\nLimits: --max N (cyclomatic), --max-nesting N, --max-statements N, --max-cognitive N\n\nExit codes: 0 success, 1 threshold exceeded, 2 input or syntax error."
+                    "ccrs [--json] [--max N] FILE...\nccrs [--json] [--max N] --stdin FILENAME\nccrs serve\n\nSelection: --metrics cyclomatic,nesting,statements,cognitive (all by default)\n\nLimits: --max N (cyclomatic), --max-nesting N, --max-statements N, --max-cognitive N\n\nExit codes: 0 success, 1 threshold exceeded, 2 input or syntax error."
                 );
                 return Ok(0);
             }
@@ -72,6 +81,19 @@ fn run() -> Result<u8, String> {
             }
             _ if arg.starts_with('-') => return Err(format!("Unknown option: {arg}")),
             _ => paths.push(arg),
+        }
+    }
+    for (metric, flag, limit) in [
+        (Metric::Cyclomatic, "--max", max),
+        (Metric::Nesting, "--max-nesting", max_nesting),
+        (Metric::Statements, "--max-statements", max_statements),
+        (Metric::Cognitive, "--max-cognitive", max_cognitive),
+    ] {
+        if limit.is_some() && !metrics.contains(&metric) {
+            return Err(format!(
+                "{flag} applies to disabled metric '{}'; include it in --metrics",
+                metric.name()
+            ));
         }
     }
     if stdin_path.is_some() && !paths.is_empty() {
@@ -96,12 +118,20 @@ fn run() -> Result<u8, String> {
         } else {
             std::fs::read_to_string(&path).map_err(|e| format!("{path}: {e}"))?
         };
-        let report = Document::new(language, source)?.analyze();
+        let report = Document::new(language, source)?.analyze_with(&metrics);
         if report.scopes.iter().any(|s| {
-            s.complexity > max
-                || s.max_nesting > max_nesting
-                || s.statement_count > max_statements
-                || s.cognitive_complexity > max_cognitive
+            s.complexity
+                .zip(max)
+                .is_some_and(|(value, limit)| value > limit)
+                || s.max_nesting
+                    .zip(max_nesting)
+                    .is_some_and(|(value, limit)| value > limit)
+                || s.statement_count
+                    .zip(max_statements)
+                    .is_some_and(|(value, limit)| value > limit)
+                || s.cognitive_complexity
+                    .zip(max_cognitive)
+                    .is_some_and(|(value, limit)| value > limit)
         }) {
             exit = exit.max(1);
         }
@@ -112,15 +142,19 @@ fn run() -> Result<u8, String> {
             println!("{}", serde_json::json!({"path": path, "report": report}));
         } else {
             for scope in &report.scopes {
-                println!(
-                    "{path}:{}  cyclomatic={} nesting={} statements={} cognitive={}  {}",
-                    scope.line,
+                let values = [
                     scope.complexity,
                     scope.max_nesting,
                     scope.statement_count,
                     scope.cognitive_complexity,
-                    scope.name
-                );
+                ];
+                let scores = Metric::ALL
+                    .into_iter()
+                    .zip(values)
+                    .filter_map(|(metric, value)| value.map(|v| format!("{}={v}", metric.name())))
+                    .collect::<Vec<_>>()
+                    .join(" ");
+                println!("{path}:{}  {scores}  {}", scope.line, scope.name);
             }
             if report.has_errors {
                 eprintln!("{path}: syntax errors; scores are provisional");
