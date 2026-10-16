@@ -20,21 +20,22 @@ nested function bodies do not inflate their parents' scores.
 ## Installation
 
 Requires a current stable Rust toolchain and a C compiler.
-Install directly from GitHub with an account that has repository access:
+Install directly from GitHub:
 
 ```sh
 cargo install --git https://github.com/cmraible/ccrs.git --locked ccrs
 ```
 
-Or install from a local checkout:
+Or clone the repository and install locally:
 
 ```sh
+git clone https://github.com/cmraible/ccrs.git
+cd ccrs
 cargo install --path . --locked
 ```
 
-ccrs is not currently published on crates.io. If Cargo cannot authenticate to the
-repository, configure Git authentication and retry with
-`CARGO_NET_GIT_FETCH_WITH_CLI=true`.
+ccrs is not currently published on crates.io. Both methods build the `ccrs`
+binary and install it into Cargo's bin directory (usually `~/.cargo/bin`).
 
 ## Usage
 
