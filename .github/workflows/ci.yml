@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Formatting and Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --all --check
+      - run: cargo clippy --locked --all-targets -- -D warnings
+
+  test:
+    name: Test (${{ matrix.os }}, Rust ${{ matrix.rust }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        rust: [stable]
+        include:
+          - os: ubuntu-latest
+            rust: '1.90.0'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+      - run: cargo test --locked
+      - run: cargo build --release --locked
+
+  references:
+    name: ESLint and SonarJS comparisons
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Install reference tools
+        run: npm install --prefix "${{ runner.temp }}/ccrs-oracle" --no-audit --no-fund eslint@10.12.0 @typescript-eslint/parser@8.71.2 eslint-plugin-sonarjs@4.2.2
+      - run: cargo build --locked
+      - run: node scripts/check-eslint.cjs "${{ runner.temp }}/ccrs-oracle"
+      - run: node scripts/check-metrics.cjs "${{ runner.temp }}/ccrs-oracle"

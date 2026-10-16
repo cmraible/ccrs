@@ -19,7 +19,7 @@ nested function bodies do not inflate their parents' scores.
 
 ## Installation
 
-Requires a current stable Rust toolchain and a C compiler.
+Requires Rust 1.90 or later and a C compiler.
 Install directly from GitHub:
 
 ```sh
@@ -42,6 +42,7 @@ binary and install it into Cargo's bin directory (usually `~/.cargo/bin`).
 Analyze one or more files:
 
 ```sh
+ccrs --version
 ccrs src/example.ts
 ccrs src/api.ts src/components/Button.tsx
 ```
@@ -119,3 +120,7 @@ and the [Rust API](docs/rust-api.md) for direct library integration.
 - [JSON protocol](docs/protocol.md): buffer editing, versions, and error handling.
 - [Rust API](docs/rust-api.md): analysis, metric selection, and incremental edits.
 - [Development and validation](docs/development.md): tests, reference comparisons, and benchmarks.
+
+## License
+
+[MIT](LICENSE).

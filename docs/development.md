@@ -3,14 +3,18 @@
 [Back to the README](../README.md)
 
 Run these commands from the repository root. Node.js is needed only for the
-optional reference comparisons.
+optional reference comparisons. Rust 1.90 is the minimum supported toolchain.
+
+GitHub Actions checks formatting and Clippy, tests and builds on Linux, macOS,
+and Windows, and runs the reference comparisons on Linux. A separate Linux
+matrix entry tests Rust 1.90 to keep the minimum version verified.
 
 ## Checks
 
 ```sh
-cargo test
+cargo test --locked
 cargo fmt --check
-cargo clippy --all-targets -- -D warnings
+cargo clippy --locked --all-targets -- -D warnings
 cargo bench --bench latency
 ```
 
@@ -24,7 +28,7 @@ For an independent reference, install test-only dependencies outside the project
 
 ```sh
 npm install --prefix /tmp/ccrs-oracle eslint@10.12.0 @typescript-eslint/parser@8.71.2 eslint-plugin-sonarjs@4.2.2
-cargo build
+cargo build --locked
 node scripts/check-eslint.cjs /tmp/ccrs-oracle
 node scripts/check-metrics.cjs /tmp/ccrs-oracle
 ```

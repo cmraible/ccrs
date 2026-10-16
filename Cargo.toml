@@ -2,6 +2,10 @@
 name = "ccrs"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.90"
+license = "MIT"
+repository = "https://github.com/cmraible/ccrs"
+publish = false
 description = "Incremental code complexity metrics for JavaScript and TypeScript"
 
 [dependencies]

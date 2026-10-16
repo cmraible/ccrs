@@ -320,3 +320,16 @@ fn service_keeps_each_documents_metric_selection_across_edits() {
         assert!(empty.get(key).is_none());
     }
 }
+
+#[test]
+fn cli_reports_its_version_without_requiring_input() {
+    for flag in ["--version", "-V"] {
+        let output = run(&[flag], "");
+        assert!(output.status.success());
+        assert_eq!(
+            String::from_utf8(output.stdout).unwrap(),
+            format!("ccrs {}\n", env!("CARGO_PKG_VERSION"))
+        );
+        assert!(output.stderr.is_empty());
+    }
+}

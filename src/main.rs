@@ -46,6 +46,10 @@ fn run() -> Result<u8, String> {
     let mut paths = Vec::new();
     while let Some(arg) = args.next() {
         match arg.as_str() {
+            "--version" | "-V" => {
+                println!("ccrs {}", env!("CARGO_PKG_VERSION"));
+                return Ok(0);
+            }
             "--json" => json = true,
             "--metrics" => {
                 metrics = args
@@ -71,7 +75,7 @@ fn run() -> Result<u8, String> {
             "--stdin" => stdin_path = Some(args.next().ok_or("--stdin requires a filename")?),
             "--help" | "-h" => {
                 println!(
-                    "ccrs [--json] [--max N] FILE...\nccrs [--json] [--max N] --stdin FILENAME\nccrs serve\n\nSelection: --metrics cyclomatic,nesting,statements,cognitive (all by default)\n\nLimits: --max N (cyclomatic), --max-nesting N, --max-statements N, --max-cognitive N\n\nExit codes: 0 success, 1 threshold exceeded, 2 input or syntax error."
+                    "ccrs [--json] [--max N] FILE...\nccrs [--json] [--max N] --stdin FILENAME\nccrs serve\nccrs --version\n\nSelection: --metrics cyclomatic,nesting,statements,cognitive (all by default)\n\nLimits: --max N (cyclomatic), --max-nesting N, --max-statements N, --max-cognitive N\n\nExit codes: 0 success, 1 threshold exceeded, 2 input or syntax error."
                 );
                 return Ok(0);
             }
